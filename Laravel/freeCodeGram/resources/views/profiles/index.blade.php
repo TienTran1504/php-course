@@ -8,8 +8,9 @@
                 alt="avatar" class="rounded-circle" style="height:120px; width:120px;">
         </div>
         <div class="col-9 pt-5">
-            <div>
-                <h1>freecodecamp</h1>
+            <div class="d-flex justify-content-between align-items-baseline">
+                <h1>{{$user->username}}</h1>
+                <a class="btn btn-primary" href="#">Add New Post</a>
             </div>
             <div class="d-flex">
                 <div class="p-2" style="padding-left:0px !important;"><strong>153 </strong>posts</div>
@@ -17,13 +18,11 @@
                 <div class="p-2"><strong>212 </strong>following</div>
             </div>
             <div class="mt-4" style="font-weight:bold">
-                freeCodeCamp.org
+                {{$user->profile->title}}
             </div>
-            <div>We're a global community of millions of people learning to code together.
-                LearnToCodeRPG: https://www.freecodecamp.org/news/learn-to-code-rpg/
-                www.freecodecamp.org
+            <div>{{$user->profile->description}}
             </div>
-            <div> <a href="#">www.freecodecamp.org</a></div>
+            <div> <a href="#">{{$user->profile->url}}</a></div>
 
         </div>
     </div>
