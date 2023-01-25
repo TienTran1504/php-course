@@ -25,10 +25,10 @@
             <a class="btn btn-primary" href="/profile/{{$user->id}}/edit">Edit profile</a>
             @endcan
             <div class="d-flex">
-                <div class="p-2" style="padding-left:0px !important;"><strong>{{$user->posts->count()}} </strong>posts
+                <div class="p-2" style="padding-left:0px !important;"><strong>{{$postCount}} </strong>posts
                 </div>
-                <div class="p-2"><strong>{{$user->profile->followers->count()}} </strong>followers</div>
-                <div class="p-2"><strong>{{$user->following->count()}} </strong>following</div>
+                <div class="p-2"><strong>{{$followersCount}} </strong>followers</div>
+                <div class="p-2"><strong>{{$followingCount}} </strong>following</div>
             </div>
             <div class="mt-4" style="font-weight:bold">
                 {{$user->profile->title}}
