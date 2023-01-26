@@ -17,6 +17,7 @@ Route::get('/products', [
     ProductsController::class,
     'index'
 ]);
+Route::get('/products/{productName}', [ProductsController::class,'detail']);
 Route::get('/about', [ProductsController::class, 'about']);
 
 // Route::get('/', function () {

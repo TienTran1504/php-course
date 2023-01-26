@@ -8,6 +8,12 @@
 </head>
 <body>
     <h1>Index function of controller</h1>
-    <h2>{{ $title }}</h2>
+    {{-- <h2>Title: {{ $title }}</h2> --}}
+    {{-- <h2>Name:{{ $Name }}</h2> --}}
+    {{-- @foreach ($products as $item)
+        <h2>{{ $item }}</h2>
+    @endforeach --}}
+
+    <h2>{{ $products }}</h2>
 </body>
 </html>
