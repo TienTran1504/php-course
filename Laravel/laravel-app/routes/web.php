@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\PagesController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -13,11 +15,17 @@ use App\Http\Controllers\ProductsController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/', [PagesController::class, 'index']);
 Route::get('/products', [
     ProductsController::class,
     'index'
+])->name('products');
+Route::get('/products/{productName}/{id}', [ProductsController::class,'detail'])
+->where([
+    'productName'=>'[a-zA-Z0 -9]+',
+    'id'=>'[0-9]+'
 ]);
-Route::get('/products/{productName}', [ProductsController::class,'detail']);
+// '[a-zA-Z0 -9]+'
 Route::get('/about', [ProductsController::class, 'about']);
 
 // Route::get('/', function () {
