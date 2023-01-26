@@ -2,7 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\PostsController;
 use App\Http\Controllers\PagesController;
+use App\Http\Controllers\FoodsController;
+
 
 
 /*
@@ -17,6 +20,15 @@ use App\Http\Controllers\PagesController;
 */
 Route::get('/', [PagesController::class, 'index']);
 Route::get('/about',[PagesController::class, 'about']);
+
+Route::get('/posts',[PostsController::class, 'index']);
+
+// Route::get('/foods',[FoodsController::class, 'index']);
+//dùng resource thay get thì nó sẽ thêm toàn bộ CRUD
+Route::resource('/foods',FoodsController::class);
+
+
+
 
 // Route::get('/products', [
 //     ProductsController::class,
