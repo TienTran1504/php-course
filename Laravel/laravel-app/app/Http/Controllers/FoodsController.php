@@ -3,23 +3,28 @@
 namespace App\Http\Controllers;
 
 use App\Models\Food;
+use App\Models\Category;
+use App\Rules\Uppercase;
 use Illuminate\Http\Request;
+use App\Http\Requests\CreateValidationRequest;
 
 class FoodsController extends Controller
 {
     //
-    public function index(){
+    public function index()
+    {
 
         $foods = Food::all(); // tìm ra tất cả các food;
         // dd($foods);
         // $foods = Food::where('name', '=', 'Maria Swaniawski')->get();
         // $foods = Food::where('name', '=', 'Maria Swaniawski')->firstOrFail();
-        return view('foods.index',[
+        return view('foods.index', [
             'foods' => $foods,
         ]);
 
     }
-    public function store(Request $request){
+    public function store(CreateValidationRequest $request)
+    {
         // C1:
         // $food = new Food();
         // $food->name = $request->input('foodName');
@@ -27,26 +32,45 @@ class FoodsController extends Controller
         // $food->count = $request->input('foodCount');
         // $food->save();
 
+        // $request->validate([
+        //     'name' => 'required | unique:food',
+        //     // 'name' => new UpperCase,
+        //     'description' => 'required',
+        //     'count' => 'required| integer | min:0 | max:1000',
+        //     'category_id' => 'required',
+        // ]);
+        $request->validated();
+
         $food = Food::create([
-            'name' => $request->input('foodName'),
-            'count' => $request->input('foodCount'),
-            'description' => $request->input('foodDescription')
+            'name' => $request->input('name'),
+            'count' => $request->input('count'),
+            'description' => $request->input('description'),
+            'category_id' => $request->input('category_id')
         ]);
         $food->save();
         return redirect('/foods');
     }
-    public function create(){
+    public function create()
+    {
+        $categories = Category::all();
+        return view('foods.create', compact('categories'));
+    }
+    public function show($id)
+    {
+        $food = Food::find($id);
+        $category = Category::find($food->category_id);
+        $food->category = $category;
 
-        return view('foods.create');
+        return view('foods.show', compact('food', 'category'));
     }
-    public function show($id){
-        
-    }
-    public function update(Request $request,$id){
+    public function update(CreateValidationRequest $request, $id)
+    {
+        $request->validated();
         $food = Food::where('id', $id)->update([
-            'name' => $request->input('foodName'),
-            'count' => $request->input('foodCount'),
-            'description' => $request->input('foodDescription')
+            'name' => $request->input('name'),
+            'count' => $request->input('count'),
+            'description' => $request->input('description'),
+            'category_id' => $request->input('category_id'),
         ]);
         return redirect('/foods');
     }
@@ -56,9 +80,11 @@ class FoodsController extends Controller
         $food->delete();
         return redirect('/foods');
     }
-    public function edit($id){
+    public function edit($id)
+    {
         $food = Food::find($id)->first();
-        
-        return view('foods.edit',compact('food'));
+        $categories = Category::all();
+
+        return view('foods.edit', compact('food', 'categories'));
     }
 }

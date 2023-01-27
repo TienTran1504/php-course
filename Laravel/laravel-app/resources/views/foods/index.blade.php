@@ -6,6 +6,9 @@
  Add a new Food
 </a>
 @foreach ($foods as $food)
+    <div class="fw-bold">
+        <a href="/foods/{{ $food->id }}">Show detail {{ $food->name }}</a>
+    </div>
     <h3>{{ $food->name }}</h3>
     <h3>{{ $food->description }}</h3>
     <h3>{{ $food->count }}</h3>

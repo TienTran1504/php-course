@@ -12,17 +12,32 @@
     --}}
 
   <div class="mb-3 form-group">
-    <label for="foodName" class="form-label">Food Name</label>
-    <input type="text" class="form-control" id="foodName" name="foodName"  placeholder="Enter food's name">
+    <label for="name" class="form-label">Food Name</label>
+    <input type="text" class="form-control" id="name" name="name"  placeholder="Enter food's name">
   </div>
   <div class="mb-3 form-group">
-    <label for="foodDescription" class="form-label">Description</label>
-    <input type="text" class="form-control" id="foodDescription" name="foodDescription" placeholder="Enter food's description">
+    <label for="description" class="form-label">Description</label>
+    <input type="text" class="form-control" id="description" name="description" placeholder="Enter food's description">
   </div>
   <div class="mb-3 form-group">
-    <label for="foodCount" class="form-label">Count </label>
-    <input type="text" class="form-control" id="foodCount" name="foodCount" placeholder="Enter food's count">
+    <label for="count" class="form-label">Count </label>
+    <input type="text" class="form-control" id="count" name="count" placeholder="Enter food's count">
   </div>
+  <select name="category_id" class="form-select" aria-label="Default select example">
+    @foreach ($categories as $category)
+        <option value ="{{ $category->id }}">{{ $category->name }}</option>
+    @endforeach
+  </select>
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>
+@if ($errors->any())
+    <div class="row">
+        @foreach ($errors->all() as $error)
+        <p class="text-danger">
+            {{ $error }}
+        </p>
+        @endforeach
+    </div>
+    
+@endif
 @endsection
