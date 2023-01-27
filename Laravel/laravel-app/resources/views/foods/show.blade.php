@@ -35,5 +35,6 @@
     <label for="foodCount" class="form-label">Count </label>
     <input type="text" class="form-control" id="foodCount"  value="{{ $food->count }}"  disabled name="foodCount" placeholder="Enter food's count">
   </div>
+  <img src="{{ asset('images/'.$food->image_path) }}">
 </form>
 @endsection

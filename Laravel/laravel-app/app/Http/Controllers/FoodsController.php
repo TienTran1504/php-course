@@ -23,14 +23,34 @@ class FoodsController extends Controller
         ]);
 
     }
-    public function store(CreateValidationRequest $request)
+    public function store(Request $request)
     {
+
         // C1:
         // $food = new Food();
         // $food->name = $request->input('foodName');
         // $food->description = $request->input('foodDescription');
         // $food->count = $request->input('foodCount');
         // $food->save();
+
+        //$request->file('image')->guessExtension(); // trả về jpg,png,...
+        //$request->file('image')->getSize(); // kilobytes
+        //$request->file('image')->getError();
+        //$request->file('image')->isValid();
+        $request->validate([
+            'image' => 'required|mimes:jpg,png,jpeg|max:5048',
+            'name' => 'required',
+            'count' => 'required| integer | min:0 | max:1000',
+            'description' => 'required',
+            'category_id' => 'required',
+
+        ]);
+
+        // tạo mới tên image
+        $generatedImageName = 'image' . time() . '-' . $request->name . '.' . $request->image->extension();
+
+        //move to a folder
+        $request->image->move(public_path('images'), $generatedImageName);
 
         // $request->validate([
         //     'name' => 'required | unique:food',
@@ -39,13 +59,16 @@ class FoodsController extends Controller
         //     'count' => 'required| integer | min:0 | max:1000',
         //     'category_id' => 'required',
         // ]);
-        $request->validated();
+
+
+        //$request->validated();
 
         $food = Food::create([
             'name' => $request->input('name'),
             'count' => $request->input('count'),
             'description' => $request->input('description'),
-            'category_id' => $request->input('category_id')
+            'category_id' => $request->input('category_id'),
+            'image_path' => $generatedImageName
         ]);
         $food->save();
         return redirect('/foods');

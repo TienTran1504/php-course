@@ -3,7 +3,8 @@
 @section('content')
 <h1>This is Food Create Page. Please enter food information</h1>
 
-<form action="/foods" method="POST" class="mb-3">
+<form action="/foods" method="POST" class="mb-3" enctype ="multipart/form-data">
+
     {{-- not work, because it related to CSRF - cross site reuest forgery --}}
     @csrf
     {{-- the key is generated at every session start
@@ -28,6 +29,10 @@
         <option value ="{{ $category->id }}">{{ $category->name }}</option>
     @endforeach
   </select>
+  <div class="mb-3 form-group">
+    <label for="image" class="form-label">Food Image</label>
+    <input type="file" class="form-control" id="image" name="image"  placeholder="Enter food's image">
+  </div>
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 @if ($errors->any())
