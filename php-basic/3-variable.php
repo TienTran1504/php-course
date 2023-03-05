@@ -13,11 +13,11 @@
     <?php
     $characterName = "Ngoc";
     $characterAge = 20;
-        echo "$characterName <br>";
-        $characterName = "Mike";
-        echo "$characterName  $characterAge years old <br>";
-        echo "I love my name <br>";
-        echo "I love my age $characterAge <br>";
+    echo "$characterName <br>";
+    $characterName = "Mike";
+    echo "$characterName  $characterAge years old <br>";
+    echo "I love my name <br>";
+    echo "I love my age $characterAge <br>";
 
     ?>
 

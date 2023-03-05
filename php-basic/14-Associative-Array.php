@@ -17,8 +17,8 @@
     </form>
 
     <?php
-    $grades = array("Jim"=>"A+","Pam"=>"B-","Alice"=>"C+");
-    
+    $grades = array("Jim" => "A+", "Pam" => "B-", "Alice" => "C+");
+
     echo $grades["Jim"]; // A+ nếu trùng key thì nó sẽ lấy value cuối cùng của key tương ứng
     
     $grades["Tim"] = "F";
@@ -27,7 +27,7 @@
     $grades["Pam"] = "D";
     echo $grades["Pam"];
     echo count($grades);
-    echo $grades[$_POST["student"]];
+    echo $grades[$_POST["student"]]; // nhập đúng tên trong array sẽ hiện grade
     ?>
 
 </body>

@@ -21,11 +21,11 @@
     $phrase[0] = "B";
     echo $phrase;
     $phrase[0] = "G";
-    echo str_replace("Giraffe","Panda",$phrase);
+    echo str_replace("Giraffe", "Panda", $phrase);
 
     $phrase = "Giraffe Academy <br>";
-    echo substr($phrase,8);
-    echo substr($phrase,8,3);
+    echo substr($phrase, 8);
+    echo substr($phrase, 8, 3);
 
     ?>
     <!-- giraffe academy

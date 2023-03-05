@@ -10,9 +10,9 @@
 
 <body>
 
-    <?php 
+    <?php
     echo "<h1>Hello world!!! Năm mới thật nhiều may mắn động lực, nhanh chóng tìm được việc làm cho bản thân. Cố lên!!!</h1>"
-    ?>
+        ?>
 
 
 
