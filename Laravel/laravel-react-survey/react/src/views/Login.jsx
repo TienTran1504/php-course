@@ -1,6 +1,37 @@
 import { LockClosedIcon } from '@heroicons/react/20/solid'
-
+import { useState } from 'react'
+import { Link } from 'react-router-dom';
+import { useStateContext } from '../contexts/ContextProvider.jsx'
+import axiosClient from '../axios';
 export default function Login() {
+    const { setCurrentUser, setUserToken } = useStateContext();
+
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState({ __html: '' });
+
+    const onSubmit = (ev) => {
+        ev.preventDefault();
+        setError({ __html: '' });
+
+        axiosClient.post('/login', {
+            email,
+            password,
+        })
+            .then(({ data }) => {
+                setCurrentUser(data.user);
+                setUserToken(data.token);
+            })
+            .catch((error) => {
+                if (error.response) {
+                    const finalErrors = Object.values(error.response.data.errors).reduce((accum, next) => {
+                        return [...accum, ...next];
+                    }, [])
+                    setError({ __html: finalErrors.join('<br>') })
+                }
+                console.error(error)
+            })
+    }
     return (
         <>
             <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
@@ -8,11 +39,17 @@ export default function Login() {
             </h2>
             <p className="mt-2 text-center text-sm text-gray-600">
                 Or{' '}
-                <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
-                    start your 14-day free trial
-                </a>
+                <Link to="/signup" className="font-medium text-indigo-600 hover:text-indigo-500">
+                    Sign up for free
+                </Link>
             </p>
-            <form className="mt-8 space-y-6" action="#" method="POST">
+            {error.__html && (
+                <div className="bg-red-500 rounded py-2 px-3 text-white"
+                    dangerouslySetInnerHTML={error}>
+
+                </div>
+            )}
+            <form className="mt-8 space-y-6" onSubmit={onSubmit} action="#" method="POST">
                 <input type="hidden" name="remember" defaultValue="true" />
                 <div className="-space-y-px rounded-md shadow-sm">
                     <div>
@@ -25,6 +62,8 @@ export default function Login() {
                             type="email"
                             autoComplete="email"
                             required
+                            value={email}
+                            onChange={e => setEmail(e.target.value)}
                             className="relative block w-full rounded-t-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                             placeholder="Email address"
                         />
@@ -39,6 +78,8 @@ export default function Login() {
                             type="password"
                             autoComplete="current-password"
                             required
+                            value={password}
+                            onChange={e => setPassword(e.target.value)}
                             className="relative block w-full rounded-b-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                             placeholder="Password"
                         />
@@ -58,11 +99,7 @@ export default function Login() {
                         </label>
                     </div>
 
-                    <div className="text-sm">
-                        <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
-                            Forgot your password?
-                        </a>
-                    </div>
+
                 </div>
 
                 <div>

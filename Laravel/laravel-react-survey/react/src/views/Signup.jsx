@@ -1,6 +1,41 @@
 import { LockClosedIcon } from '@heroicons/react/20/solid'
-
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import axiosClient from '../axios.js'
+import { useStateContext } from '../contexts/ContextProvider.jsx'
 export default function Signup() {
+    const { setCurrentUser, setUserToken } = useStateContext();
+    const [fullName, setFullName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [passwordConfirmation, setPasswordConfirmation] = useState('');
+    const [error, setError] = useState({ __html: '' });
+
+    const onSubmit = (ev) => {
+        ev.preventDefault();
+        setError({ __html: '' });
+
+        axiosClient.post('/signup', {
+            name: fullName,
+            email,
+            password,
+            password_confirmation: passwordConfirmation,
+        })
+            .then(({ data }) => {
+                setCurrentUser(data.user);
+                setUserToken(data.token);
+            })
+            .catch((error) => {
+                if (error.response) {
+                    const finalErrors = Object.values(error.response.data.errors).reduce((accum, next) => {
+                        return [...accum, ...next];
+                    }, [])
+                    console.log(finalErrors);
+                    setError({ __html: finalErrors.join('<br>') })
+                }
+                console.error(error)
+            })
+    }
     return (
         <>
             <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
@@ -8,13 +43,34 @@ export default function Signup() {
             </h2>
             <p className="mt-2 text-center text-sm text-gray-600">
                 Or{' '}
-                <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
-                    start your 14-day free trial
-                </a>
+                <Link to="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
+                    Login with your account
+                </Link>
             </p>
-            <form className="mt-8 space-y-6" action="#" method="POST">
+            {error.__html && (
+                <div className="bg-red-500 rounded py-2 px-3 text-white"
+                    dangerouslySetInnerHTML={error}>
+
+                </div>
+            )}
+            <form className="mt-8 space-y-6" onSubmit={onSubmit} action="#" method="POST">
                 <input type="hidden" name="remember" defaultValue="true" />
                 <div className="-space-y-px rounded-md shadow-sm">
+                    <div>
+                        <label htmlFor="full-name" className="sr-only">
+                            Full name
+                        </label>
+                        <input
+                            id="full-name"
+                            name="name"
+                            type="text"
+                            required
+                            value={fullName}
+                            onChange={e => setFullName(e.target.value)}
+                            className="relative block w-full rounded-t-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            placeholder="Full name"
+                        />
+                    </div>
                     <div>
                         <label htmlFor="email-address" className="sr-only">
                             Email address
@@ -25,7 +81,9 @@ export default function Signup() {
                             type="email"
                             autoComplete="email"
                             required
-                            className="relative block w-full rounded-t-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            value={email}
+                            onChange={e => setEmail(e.target.value)}
+                            className="relative block w-full  border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                             placeholder="Email address"
                         />
                     </div>
@@ -39,31 +97,30 @@ export default function Signup() {
                             type="password"
                             autoComplete="current-password"
                             required
+                            value={password}
+                            onChange={e => setPassword(e.target.value)}
                             className="relative block w-full rounded-b-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                             placeholder="Password"
                         />
                     </div>
-                </div>
-
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center">
-                        <input
-                            id="remember-me"
-                            name="remember-me"
-                            type="checkbox"
-                            className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                        />
-                        <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
-                            Remember me
+                    <div>
+                        <label htmlFor="password-confirmation" className="sr-only">
+                            Password Confirmation
                         </label>
-                    </div>
-
-                    <div className="text-sm">
-                        <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
-                            Forgot your password?
-                        </a>
+                        <input
+                            id="password-confirmation"
+                            name="password_confirmation"
+                            type="password"
+                            required
+                            value={passwordConfirmation}
+                            onChange={e => setPasswordConfirmation(e.target.value)}
+                            className="relative block w-full rounded-b-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            placeholder="Password Confirmation"
+                        />
                     </div>
                 </div>
+
+
 
                 <div>
                     <button
@@ -73,7 +130,7 @@ export default function Signup() {
                         <span className="absolute inset-y-0 left-0 flex items-center pl-3">
                             <LockClosedIcon className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400" aria-hidden="true" />
                         </span>
-                        Sign in
+                        Sign Up
                     </button>
                 </div>
             </form>
