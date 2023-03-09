@@ -5,6 +5,7 @@ import PageComponent from "../components/PageComponent";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { useStateContext } from "../contexts/ContextProvider";
+import axiosClient from '../axios.js'
 
 export default function SurveyView() {
 
@@ -38,34 +39,42 @@ export default function SurveyView() {
     const onSubmit = (ev) => {
         ev.preventDefault();
 
-        const payload = { ...survey };
-        if (payload.image) {
-            payload.image = payload.image_url;
-        }
-        delete payload.image_url;
-        let res = null;
-        if (id) {
-            res = axiosClient.put(`/survey/${id}`, payload);
-        } else {
-            res = axiosClient.post("/survey", payload);
-        }
+        axiosClient.post('/survey', {
+            'title': 'Lorem Ipsum',
+            description: 'Test',
+            expire_date: '2024/03/06',
+            status: true,
+            questions: [],
+        })
 
-        res
-            .then((res) => {
-                console.log(res);
-                navigate("/surveys");
-                if (id) {
-                    showToast("The survey was updated");
-                } else {
-                    showToast("The survey was created");
-                }
-            })
-            .catch((err) => {
-                if (err && err.response) {
-                    setError(err.response.data.message);
-                }
-                console.log(err, err.response);
-            });
+        // const payload = { ...survey };
+        // if (payload.image) {
+        //     payload.image = payload.image_url;
+        // }
+        // delete payload.image_url;
+        // let res = null;
+        // if (id) {
+        //     res = axiosClient.put(`/survey/${id}`, payload);
+        // } else {
+        //     res = axiosClient.post("/survey", payload);
+        // }
+
+        // res
+        //     .then((res) => {
+        //         console.log(res);
+        //         navigate("/surveys");
+        //         if (id) {
+        //             showToast("The survey was updated");
+        //         } else {
+        //             showToast("The survey was created");
+        //         }
+        //     })
+        //     .catch((err) => {
+        //         if (err && err.response) {
+        //             setError(err.response.data.message);
+        //         }
+        //         console.log(err, err.response);
+        //     });
     };
 
     return (
