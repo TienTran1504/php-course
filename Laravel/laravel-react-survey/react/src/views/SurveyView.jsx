@@ -1,14 +1,14 @@
 import { LinkIcon, PhotoIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TButton from "../components/core/TButton";
 import PageComponent from "../components/PageComponent";
-import { useNavigate, useParams } from "react-router-dom";
-import { useEffect } from "react";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { useStateContext } from "../contexts/ContextProvider";
 import axiosClient from '../axios.js'
+import SurveyQuestions from "../components/SurveyQuestions";
 
 export default function SurveyView() {
-
+    const navigate = useNavigate();
 
     const [survey, setSurvey] = useState({
         title: "",
@@ -20,6 +20,7 @@ export default function SurveyView() {
         expire_date: "",
         questions: [],
     });
+    const [error, setError] = useState('');
     const onImageChoose = (ev) => {
         const file = ev.target.files[0];
 
@@ -39,20 +40,32 @@ export default function SurveyView() {
     const onSubmit = (ev) => {
         ev.preventDefault();
 
-        axiosClient.post('/survey', {
-            'title': 'Lorem Ipsum',
-            description: 'Test',
-            expire_date: '2024/03/06',
-            status: true,
-            questions: [],
-        })
+        // axiosClient.post('/survey', {
+        //     title: 'Lorem Ipsum',
+        //     description: 'Test',
+        //     expire_date: '2024/03/06',
+        //     status: true,
+        //     questions: [],
+        // })
 
-        // const payload = { ...survey };
-        // if (payload.image) {
-        //     payload.image = payload.image_url;
-        // }
-        // delete payload.image_url;
-        // let res = null;
+        const payload = { ...survey };
+        if (payload.image) {
+            payload.image = payload.image_url;
+        }
+        delete payload.image_url;
+
+        axiosClient.post('/survey', payload)
+            .then((res) => {
+                console.log(res);
+                navigate('/surveys')
+            })
+            .catch((err) => {
+                if (err && err.response) {
+                    setError(err.response.data.message);
+                }
+                console.log(err, err.response);
+            });
+        //let res = null;
         // if (id) {
         //     res = axiosClient.put(`/survey/${id}`, payload);
         // } else {
@@ -77,12 +90,26 @@ export default function SurveyView() {
         //     });
     };
 
+    function onQuestionsUpdate(questions) {
+        setSurvey({
+            ...survey,
+            questions
+        });
+    }
+
     return (
-        <PageComponent>
+        <PageComponent title="Create new Survey">
             <form action="#" method="POST" onSubmit={onSubmit}>
                 <div className="shadow sm:overflow-hidden sm:rounded-md">
                     {/*Image*/}
                     <div className="space-y-6 bg-white px-4 py-5 sm:p-6">
+
+                        {error && (
+                            <div className="bg-red-500 text-white py-3 px-3 rounded-lg">
+                                {error}
+                            </div>
+                        )}
+
                         <div>
                             <label className="block text-sm font-medium text-gray-700">
                                 Photo
@@ -178,6 +205,7 @@ export default function SurveyView() {
                                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                             />
                         </div>
+                        {/* <small className="text-red-500">lorem ipsum something</small> show error below input */}
                         {/*Expire Date*/}
 
 
@@ -208,6 +236,7 @@ export default function SurveyView() {
                             </div>
                         </div>
                         {/*Active*/}
+                        <SurveyQuestions questions={survey.questions} onQuestionsUpdate={onQuestionsUpdate} />
                     </div>
                     <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
                         <TButton>Save</TButton>
